@@ -1,17 +1,29 @@
-def depos(a, b):
-    return a + b
-    
-def withdrw(a, b):
-    return a - b
-
-
-
 
 menu = {
-    1: {"Account": "User1", "Balance": "5,000", "Action": [depos, withdrw], "History": "X", "PIN": "4334", "Locked": False},
-    2: {"Account": "User2", "Balance": "3,450", "Action": [depos, withdrw], "History": "X", "PIN": "5112", "Locked": False},
-    3: {"Account": "User3", "Balance": "10,000", "Action": [depos, withdrw], "History": "X", "PIN": "5141", "Locked": False}
+    1: {
+        "Account": "User1", 
+        "Balance": 5000, 
+        "History": [], 
+        "PIN": "4334", 
+        "Locked": False
+        },
+    2: {
+        "Account": "User2", 
+        "Balance": 3450, 
+
+        "History": [], 
+        "PIN": "5112", 
+        "Locked": False
+        },
+    3: {
+        "Account": "User3", 
+        "Balance": 10000, 
+        "History": [], 
+        "PIN": "5141", 
+        "Locked": False
+        }
 }
+
 
 
 def actions(menu_id):
@@ -33,23 +45,43 @@ def actions(menu_id):
                 print("4. Continue")
                 choice = input("Choose: ")
                 if choice == "1":
-                    balance_str = choices["Balance"].replace(",", "")
-                    current_balance = float(balance_str)
+            
                     deposit_amount = float(input("Enter amount to deposit: "))
                     if deposit_amount < 0:
                         print("Cannot deposit negative amount.")
                         continue
-                    result = depos(current_balance, deposit_amount)
-                    print(f"New balance: {result}")
+                    choices["Balance"]+- deposit_amount
+
+                    transaction = {
+                        "type": "deposit",
+                        "amount": deposit_amount,
+                        "balance": choices["Balance"]
+
+                    }
+                    menu["History"].append(transaction)
+                    print(f'New Balance: ${choices["Balance"]:, 2f}')
+
+
                 elif choice == "2":
-                    balance_str = choices["Balance"].replace(",", "")
-                    current_balance = float(balance_str)
+            
                     withdraw_amount = float(input("Enter amount to withdraw: "))
-                    if withdraw_amount > current_balance:
+                    if withdraw_amount > choices["Balance"]:
                         print("Cannot overdraft, please try again.")
                         continue
-                    result = withdrw(current_balance, withdraw_amount)
-                    print(f"New balance: {result}")
+                    choices["Balance"]+- withdraw_amount
+
+                    transaction = {
+                        "type": "withdraw",
+                        "amount": withdraw_amount,
+                        "balance": choices["Balance"]
+
+                    }
+                    menu["History"].append(transaction)
+                    print(f'New Balance: ${choices["Balance"]:, 2f}')
+
+
+                       
+ 
                 elif choice == "4":
                     continue
                 elif choice == "3":
