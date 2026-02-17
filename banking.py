@@ -10,7 +10,6 @@ menu = {
     2: {
         "Account": "User2", 
         "Balance": 3450, 
-
         "History": [], 
         "PIN": "5112", 
         "Locked": False
@@ -42,7 +41,7 @@ def actions(menu_id):
                 print("1. Deposit")
                 print("2. Withdraw")
                 print("3. Return to menu.")
-                print("4. Continue")
+                print("4. View Transaction History.")
                 choice = input("Choose: ")
                 if choice == "1":
             
@@ -50,7 +49,7 @@ def actions(menu_id):
                     if deposit_amount < 0:
                         print("Cannot deposit negative amount.")
                         continue
-                    choices["Balance"]+- deposit_amount
+                    choices["Balance"]+= deposit_amount
 
                     transaction = {
                         "type": "deposit",
@@ -58,8 +57,8 @@ def actions(menu_id):
                         "balance": choices["Balance"]
 
                     }
-                    menu["History"].append(transaction)
-                    print(f'New Balance: ${choices["Balance"]:, 2f}')
+                    choices["History"].append(transaction)
+                    print(f"New Balance: ${choices['Balance']:,.2f}")
 
 
                 elif choice == "2":
@@ -68,7 +67,7 @@ def actions(menu_id):
                     if withdraw_amount > choices["Balance"]:
                         print("Cannot overdraft, please try again.")
                         continue
-                    choices["Balance"]+- withdraw_amount
+                    choices["Balance"]-= withdraw_amount
 
                     transaction = {
                         "type": "withdraw",
@@ -76,13 +75,15 @@ def actions(menu_id):
                         "balance": choices["Balance"]
 
                     }
-                    menu["History"].append(transaction)
-                    print(f'New Balance: ${choices["Balance"]:, 2f}')
+                    choices["History"].append(transaction)
+                    print(f'New Balance: ${choices["Balance"]:,.2f}')
 
 
                        
  
                 elif choice == "4":
+                    for t in choices["History"]:
+                        print(f"{t['type']} of ${t['amount']} Balance: ${t['balance']}")
                     continue
                 elif choice == "3":
                     return
