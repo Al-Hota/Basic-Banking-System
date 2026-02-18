@@ -40,8 +40,9 @@ def actions(menu_id):
             while True:
                 print("1. Deposit")
                 print("2. Withdraw")
-                print("3. Return to menu.")
-                print("4. View Transaction History.")
+                print("3. Transfer")
+                print("4. Return to menu.")
+                print("5. View Transaction History.")
                 choice = input("Choose: ")
                 if choice == "1":
             
@@ -78,14 +79,62 @@ def actions(menu_id):
                     choices["History"].append(transaction)
                     print(f'New Balance: ${choices["Balance"]:,.2f}')
 
+                elif choice == "3":
+                    print("Available accounts:")
+                    for acc_id, data in menu.items():
+                        print(f"{acc_id}. {data['Account']}")
+
+                    try:
+                        target_id = int(input("Choose account to transfer to: "))
+                        if target_id not in menu:
+                            print("Invalid account.")
+                            continue
+                        if target_id == menu_id:
+                            print("Cannot transfer to the same account.")
+                            continue
+
+                        transfer_amount = float(input("Enter amount to transfer: "))
+                        if transfer_amount <= 0:
+                            print("Invalid amount.")
+                            continue
+                        if transfer_amount > choices["Balance"]:
+                            print("Insufficient funds.")
+                            continue
+
+                        # Deduct from sender
+                        choices["Balance"] -= transfer_amount
+
+                        # Add to receiver
+                        menu[target_id]["Balance"] += transfer_amount
+
+                        # Log sender history
+                        choices["History"].append({
+                            "type": "transfer out",
+                            "amount": transfer_amount,
+                            "balance": choices["Balance"]
+                        })
+
+                        # Log receiver history
+                        menu[target_id]["History"].append({
+                            "type": "transfer in",
+                            "amount": transfer_amount,
+                            "balance": menu[target_id]["Balance"]
+                        })
+
+                        print(f"Transfer successful. New Balance: ${choices['Balance']:,.2f}")
+
+                    except ValueError:
+                        print("Invalid input.")
+
+
 
                        
  
-                elif choice == "4":
+                elif choice == "5":
                     for t in choices["History"]:
                         print(f"{t['type']} of ${t['amount']} Balance: ${t['balance']}")
                     continue
-                elif choice == "3":
+                elif choice == "4":
                     return
         else:
             retries -= 1
